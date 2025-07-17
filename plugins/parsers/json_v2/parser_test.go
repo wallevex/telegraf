@@ -1,6 +1,7 @@
 package json_v2_test
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"sort"
@@ -18,6 +19,32 @@ import (
 	"github.com/influxdata/telegraf/plugins/parsers/json_v2"
 	"github.com/influxdata/telegraf/testutil"
 )
+
+func TestSingleConfig(t *testing.T) {
+	// Configure the plugin
+	cfg := config.NewConfig()
+	require.NoError(t, cfg.LoadConfig("telegraf.conf"))
+
+	// Gather the metrics from the input file configure
+	var acc testutil.Accumulator
+	var actualErrorMsgs []string
+	for _, input := range cfg.Inputs {
+		require.NoError(t, input.Init())
+		if err := input.Gather(&acc); err != nil {
+			actualErrorMsgs = append(actualErrorMsgs, err.Error())
+		}
+	}
+	require.Empty(t, actualErrorMsgs)
+
+	// Process expected metrics and compare with resulting metrics
+	actual := acc.GetTelegrafMetrics()
+	for _, m := range actual {
+		fmt.Println(m.Name())
+		fmt.Println(m.Time())
+		fmt.Println(m.Tags())
+		fmt.Println(m.Fields())
+	}
+}
 
 func TestMultipleConfigs(t *testing.T) {
 	// Get all directories in testdata

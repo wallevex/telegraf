@@ -1,0 +1,24 @@
+{
+    "id": "abc123",
+    "time": 1584636017,
+    "data": {
+        "deviceType": "t01",
+        "name": "xxx",
+        "temperature": 27,
+        "voltage": 3.4,
+        "active": true,
+        "alarms": [
+            {
+                "alarm_id": 1,
+                "alarm_name": "闹钟1"
+            },
+            {
+                "alarm_id": 2,
+                "alarm_name": "闹钟2"
+            }
+        ],
+        "nest": {
+            "a": 100
+        }
+    }
+}
