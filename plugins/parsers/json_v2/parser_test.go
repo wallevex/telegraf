@@ -2,6 +2,7 @@ package json_v2_test
 
 import (
 	"fmt"
+	"github.com/influxdata/telegraf/plugins/serializers/json"
 	"os"
 	"path/filepath"
 	"sort"
@@ -36,13 +37,19 @@ func TestSingleConfig(t *testing.T) {
 	}
 	require.Empty(t, actualErrorMsgs)
 
+	s := json.Serializer{}
+	require.NoError(t, s.Init())
+
 	// Process expected metrics and compare with resulting metrics
 	actual := acc.GetTelegrafMetrics()
 	for _, m := range actual {
-		fmt.Println(m.Name())
-		fmt.Println(m.Time())
-		fmt.Println(m.Tags())
-		fmt.Println(m.Fields())
+		buf, err := s.Serialize(m)
+		require.NoError(t, err)
+		fmt.Println(string(buf))
+		//fmt.Println(m.Name())
+		//fmt.Println(m.Time())
+		//fmt.Println(m.Tags())
+		//fmt.Println(m.Fields())
 	}
 }
 
